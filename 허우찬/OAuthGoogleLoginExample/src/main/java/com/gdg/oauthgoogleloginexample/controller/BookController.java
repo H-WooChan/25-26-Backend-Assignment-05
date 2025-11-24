@@ -3,19 +3,13 @@ package com.gdg.oauthgoogleloginexample.controller;
 import com.gdg.oauthgoogleloginexample.dto.BookDto;
 import com.gdg.oauthgoogleloginexample.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/books")
@@ -27,7 +21,7 @@ public class BookController {
     @PostMapping
     public ResponseEntity<BookDto> createBook(@AuthenticationPrincipal String userId, @RequestBody BookDto requestDto) {
         BookDto responseDto = bookService.createBook(Long.parseLong(userId), requestDto);
-        return ResponseEntity.created(URI.create("/api/books/" + responseDto.getId()))
+        return ResponseEntity.created(URI.create("/api/books/" + responseDto.id()))
                 .body(responseDto);
     }
 
@@ -38,8 +32,8 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BookDto>> getAllBooks() {
-        List<BookDto> books = bookService.findAllBooks();
+    public ResponseEntity<Page<BookDto>> getAllBooks(Pageable pageable) {
+        Page<BookDto> books = bookService.findAllBooks(pageable);
         return ResponseEntity.ok(books);
     }
 

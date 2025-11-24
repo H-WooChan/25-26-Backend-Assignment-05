@@ -1,7 +1,7 @@
 package com.gdg.oauthgoogleloginexample.controller;
 
-import com.gdg.oauthgoogleloginexample.domain.User;
-import com.gdg.oauthgoogleloginexample.repository.UserRepository;
+import com.gdg.oauthgoogleloginexample.dto.UserResponse;
+import com.gdg.oauthgoogleloginexample.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,16 +16,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userRepository.findAll());
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
+        return ResponseEntity.ok(userService.findAllUsers());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        User user = userRepository.findById(id).orElseThrow();
-        return ResponseEntity.ok(user);
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.findUserById(id));
     }
 }
